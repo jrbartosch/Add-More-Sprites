@@ -1,5 +1,6 @@
 import pygame
 import random
+from pygame import mixer
 scrnwidth = 800
 scrnheight = 500
 enemystartymin = 50
@@ -7,7 +8,10 @@ enemystartymax = 450
 enemystartxmin = 50
 enemystartxmax = 750
 pygame.init()
+mixer.init()
 screen = pygame.display.set_mode((scrnwidth, scrnheight))
+pygame.display.set_caption('Catch the Enemies')
+bg = pygame.image.load('bg.jpg')
 clock = pygame.time.Clock()
 player = pygame.Rect(400, 300, 50, 50)
 player_color = (0, 255, 0)
@@ -17,9 +21,12 @@ enemies = [pygame.Rect(random.randint(enemystartxmin, enemystartxmax), random.ra
 enemy_color = (255, 0, 0)
 score = 0
 font = pygame.font.Font(None, 64)
+mixer.music.load('music.wav')
+mixer.music.set_volume(0.7)
+mixer.music.play(-1)
 running = True
 while running:
-    screen.fill((0, 0, 0))
+    screen.blit(bg, (0, 0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -57,14 +64,15 @@ while running:
             enemies.remove(enemy)
             enemies.append(pygame.Rect(random.randint(enemystartxmin, enemystartxmax), random.randint(enemystartymin, enemystartymax), 50, 50))
             score += 1
+            mixer.Sound('achievement.wav').play()
     if score >= 50:
         screen.fill((0, 0, 0))
-        win_text = font.render("YOU WIN!", True, (pygame.Color('red')))
+        win_text = font.render('YOU WIN!', True, (pygame.Color('red')))
         screen.blit(win_text, (scrnwidth // 2 - win_text.get_width() // 2, scrnheight // 2 - win_text.get_height() // 2))
         pygame.display.flip()
         pygame.time.wait(3000)
         running = False
-    score_text = font.render(f"Score: {score}", True, (255, 255, 255))
+    score_text = font.render(f'Score: {score}', True, (255, 255, 255))
     screen.blit(score_text, (10, 10))
     pygame.display.flip()
     clock.tick(60)
