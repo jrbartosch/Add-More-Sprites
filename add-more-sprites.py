@@ -24,8 +24,18 @@ font = pygame.font.Font(None, 64)
 mixer.music.load('music.wav')
 mixer.music.set_volume(0.7)
 mixer.music.play(-1)
+time_limit = 90000
+start_time = pygame.time.get_ticks()
 running = True
 while running:
+    elapsed_time = pygame.time.get_ticks() - start_time
+    if elapsed_time >= time_limit:
+        screen.fill((0, 0, 0))
+        time_up_text = font.render('GAME OVER!', True, (pygame.Color('red')))
+        screen.blit(time_up_text, (scrnwidth // 2 - time_up_text.get_width() // 2, scrnheight // 2 - time_up_text.get_height() // 2))
+        pygame.display.flip()
+        pygame.time.wait(3000)
+        running = False
     screen.blit(bg, (0, 0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -67,13 +77,16 @@ while running:
             mixer.Sound('achievement.wav').play()
     if score >= 50:
         screen.fill((0, 0, 0))
-        win_text = font.render('YOU WIN!', True, (pygame.Color('red')))
+        win_text = font.render('YOU WIN!', True, (pygame.Color('green')))
         screen.blit(win_text, (scrnwidth // 2 - win_text.get_width() // 2, scrnheight // 2 - win_text.get_height() // 2))
         pygame.display.flip()
         pygame.time.wait(3000)
         running = False
     score_text = font.render(f'Score: {score}', True, (255, 255, 255))
     screen.blit(score_text, (10, 10))
+    remaining_time = max(0, (time_limit - elapsed_time) // 1000)  # in seconds
+    time_text = font.render(f'Time: {remaining_time}s', True, (pygame.Color('white')))
+    screen.blit(time_text, (scrnwidth - time_text.get_width() - 10, 10))
     pygame.display.flip()
     clock.tick(60)
 pygame.quit()
