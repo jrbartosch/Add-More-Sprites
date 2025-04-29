@@ -84,7 +84,7 @@ while running:
         running = False
     score_text = font.render(f'Score: {score}', True, (255, 255, 255))
     screen.blit(score_text, (10, 10))
-    remaining_time = max(0, (time_limit - elapsed_time) // 1000)  # in seconds
+    remaining_time = max(0, (time_limit - elapsed_time) // 1000)
     time_text = font.render(f'Time: {remaining_time}s', True, (pygame.Color('white')))
     screen.blit(time_text, (scrnwidth - time_text.get_width() - 10, 10))
     pygame.display.flip()
